@@ -20,17 +20,6 @@ int bcd(int dec)
 {
 	return ((dec/10)<<4)+(dec%10);
 }
-/*int bcd(int dec)
-{
-	int result, i;
-
-	for(i = 0; dec;) {
-		result = (dec % 10) * (int) pow(10.0f, i); // Get and convert lowest-order number. 
-		dec = (int) dec / 10; // moved down here for clarity 
-	}
-
-	return(result);
-}*/
 
 class CAboutDlg : public CDialog
 {
@@ -84,8 +73,6 @@ void CBRD2007Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_VAL22, m_val22);
 	DDX_Control(pDX, IDC_VAL23, m_val23);
 	DDX_Control(pDX, IDC_VAL24, m_val24);
-	/*DDX_Control(pDX, IDC_VAL15, m_val15);
-	DDX_Control(pDX, IDC_VAL25, m_val25);*/
 }
 
 BEGIN_MESSAGE_MAP(CBRD2007Dlg, CDialog)
@@ -192,61 +179,22 @@ BOOL CBRD2007Dlg::OnInitDialog()
 		_T("Tahoma"));
 
 	m_val11.SetFont(&font);
-	m_val11.SetMaxLen(4);
+	m_val11.SetMaxLen(DIGITS);
 	m_val12.SetFont(&font);
-	m_val12.SetMaxLen(4);
+	m_val12.SetMaxLen(DIGITS);
 	m_val13.SetFont(&font);
-	m_val13.SetMaxLen(4);
+	m_val13.SetMaxLen(DIGITS);
 	m_val14.SetFont(&font);
-	m_val14.SetMaxLen(4);
-	//m_val15.SetFont(&font);
-	//m_val15.SetMaxLen(4);
+	m_val14.SetMaxLen(DIGITS);
 
 	m_val21.SetFont(&font);
-	m_val21.SetMaxLen(4);
+	m_val21.SetMaxLen(DIGITS);
 	m_val22.SetFont(&font);
-	m_val22.SetMaxLen(4);
+	m_val22.SetMaxLen(DIGITS);
 	m_val23.SetFont(&font);
-	m_val23.SetMaxLen(4);
+	m_val23.SetMaxLen(DIGITS);
 	m_val24.SetFont(&font);
-	m_val24.SetMaxLen(4);
-	//m_val25.SetFont(&font);
-	//m_val25.SetMaxLen(4);
-
-	/*CStatic* v1 = (CStatic*)GetDlgItem(IDC_STATIC_USD);
-	v1->SetFont(&font_valute);
-	CStatic* v2 = (CStatic*)GetDlgItem(IDC_STATIC_AUD);
-	v2->SetFont(&font_valute);
-	CStatic* v3 = (CStatic*)GetDlgItem(IDC_STATIC_CAD);
-	v3->SetFont(&font_valute);
-	CStatic* v4 = (CStatic*)GetDlgItem(IDC_STATIC_EUR);
-	v4->SetFont(&font_valute);
-	CStatic* v10 = (CStatic*)GetDlgItem(IDC_STATIC_SEK);
-	v10->SetFont(&font_valute);
-
-	CStatic* vv1 = (CStatic*)GetDlgItem(IDC_STATIC11);
-	vv1->SetFont(&font_valute_l);
-	CStatic* vv2 = (CStatic*)GetDlgItem(IDC_STATIC12);
-	vv2->SetFont(&font_valute_l);
-	CStatic* vv3 = (CStatic*)GetDlgItem(IDC_STATIC13);
-	vv3->SetFont(&font_valute_l);
-	CStatic* vv4 = (CStatic*)GetDlgItem(IDC_STATIC14);
-	vv4->SetFont(&font_valute_l);
-	CStatic* vv10 = (CStatic*)GetDlgItem(IDC_STATIC20);
-	vv10->SetFont(&font_valute_l);
-
-	CStatic *fee = (CStatic*)GetDlgItem(IDC_STATIC_FEE);
-	fee->SetFont(&font_valute_l);
-	CStatic* comision = (CStatic*)GetDlgItem(IDC_STATIC_COMISION);
-	comision->SetFont(&font_valute_l);
-	CStatic* webuy = (CStatic*)GetDlgItem(IDC_STATIC_WEBUY);
-	webuy->SetFont(&font_valute_l);
-	CStatic* cumparam = (CStatic*)GetDlgItem(IDC_STATIC_CUMPARARE);
-	cumparam->SetFont(&font_valute_l);
-	CStatic* wesell = (CStatic*)GetDlgItem(IDC_STATIC_WESELL);
-	wesell->SetFont(&font_valute_l);
-	CStatic* vanzare = (CStatic*)GetDlgItem(IDC_STATIC_VANZARE);
-	vanzare->SetFont(&font_valute_l);*/
+	m_val24.SetMaxLen(DIGITS);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -402,17 +350,6 @@ void CBRD2007Dlg::ReadValues(void)
 	delete []path1;
 	delete []path2;
 
-	/*m_val11.GetWindowTextA(val11);
-	m_val21.GetWindowTextA(val12);
-	m_val12.GetWindowTextA(val21);
-	m_val22.GetWindowTextA(val22);
-	m_val13.GetWindowTextA(val31);
-	m_val23.GetWindowTextA(val32);
-	m_val14.GetWindowTextA(val41);
-	m_val24.GetWindowTextA(val42);
-	m_val10.GetWindowTextA(val51);
-	m_val20.GetWindowTextA(val52);*/
-
 	do {
 		fgets(buffer, 255, iniFile);
 		line = CString(buffer);
@@ -449,12 +386,6 @@ void CBRD2007Dlg::ReadValues(void)
 				if(leftText.CompareNoCase(_T("val42")) == 0) {
 					m_val24.SetWindowTextA(rightText);
 				}
-				/*if(leftText.CompareNoCase(_T("val51")) == 0) {
-					m_val15.SetWindowTextA(rightText);
-				}
-				if(leftText.CompareNoCase(_T("val52")) == 0) {
-					m_val25.SetWindowTextA(rightText);
-				}*/
 			}
 		}
 		if(feof(iniFile))
@@ -496,8 +427,6 @@ void CBRD2007Dlg::SaveValues(void)
 	m_val23.GetWindowTextA(val32);
 	m_val14.GetWindowTextA(val41);
 	m_val24.GetWindowTextA(val42);
-	/*m_val15.GetWindowTextA(val51);
-	m_val25.GetWindowTextA(val52);*/
 
 	tmp.Format("val11=%s\r\nval12=%s\r\nval21=%s\r\nval22=%s\r\nval31=%s\r\nval32=%s\r\nval41=%s\r\nval42=%s", val11, val12, val21, val22, val31, val32, val41, val42);
 	
@@ -637,6 +566,12 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 	panel_data[len] = 240-(unsigned char)intensity;
 	len++;
 
+	char no_number[DIGITS];
+	memset(no_number, 0x00, DIGITS);
+	for (int i = 0; i < DIGITS; i++)
+		no_number[i] = '-';
+
+
 	memset(tmp, 0x00, 10);
 	m_val11.GetWindowText(text);
 	if(!text.IsEmpty()) {
@@ -646,7 +581,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", "----");
+		sprintf_s(tmp, 10, "%s", no_number);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -659,7 +594,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", "----");
+		sprintf_s(tmp, 10, "%s", no_number);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -672,7 +607,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", "----");
+		sprintf_s(tmp, 10, "%s", no_number);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -685,7 +620,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", "----");
+		sprintf_s(tmp, 10, "%s", no_number);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -698,7 +633,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", "----");
+		sprintf_s(tmp, 10, "%s", no_number);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -711,7 +646,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", "----");
+		sprintf_s(tmp, 10, "%s", no_number);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -724,7 +659,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", "----");
+		sprintf_s(tmp, 10, "%s", no_number);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -737,37 +672,10 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", "----");
+		sprintf_s(tmp, 10, "%s", no_number);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
-/*	
-	memset(tmp, 0x00, 10);
-	m_val15.GetWindowText(text);
-	if(!text.IsEmpty()) {
-		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
-			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
-	}
-	else
-		sprintf_s(tmp, 10, "%s", "----");
-	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
-	len += strlen(tmp);
-
-	memset(tmp, 0x00, 10);
-	m_val25.GetWindowText(text);
-	if(!text.IsEmpty()) {
-		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
-			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
-	}
-	else
-		sprintf_s(tmp, 10, "%s", "----");
-	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
-	len += strlen(tmp);
-	*/
 	panel_data[len] = STOP;
 	len++;
 
@@ -912,20 +820,6 @@ void CBRD2007Dlg::OnBnClickedOpen()
 					}
 					m_val24.setCheckPoint((bool)number_of_decimal_points);
 				}
-				/*else if(idx == 9) {
-					m_val15.SetWindowText(strLine);
-				    if (strLine.Find('.') != -1) {
-						number_of_decimal_points = 1;
-					}
-					m_val14.setCheckPoint((bool)number_of_decimal_points);
-				}
-				else if(idx == 10) {
-					m_val25.SetWindowText(strLine);
-				    if (strLine.Find('.') != -1) {
-						number_of_decimal_points = 1;
-					}
-					m_val24.setCheckPoint((bool)number_of_decimal_points);
-				}*/
 			}
 		}
 		stdf.Close();
@@ -965,13 +859,7 @@ void CBRD2007Dlg::OnBnClickedSave()
 	m_val24.GetWindowText(val);
 	numbers.Append(val);
 	numbers.Append(_T("\r\n"));
-	/*m_val15.GetWindowText(val);
-	numbers.Append(val);
-	numbers.Append(_T("\r\n"));
-	m_val25.GetWindowText(val);
-	numbers.Append(val);
-	numbers.Append(_T("\r\n"));
-	*/
+
 	char tipuri[] = "Fisiere V54 (*.v44)|*.v44|Toate fisierele (*.*)|*.*||";
 	char enter[2] = {0x0d, 0x0a};
 	CFileDialog fileDlg(FALSE, "V44", NULL, OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT, tipuri, this);
