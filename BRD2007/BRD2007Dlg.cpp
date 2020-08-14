@@ -12,8 +12,8 @@
 #define new DEBUG_NEW
 #endif
 
-unsigned char START = 173;
-unsigned char STOP = 174;
+//unsigned char START = 173;
+//unsigned char STOP = 174;
 
 // CAboutDlg dialog used for App About
 int bcd(int dec)
@@ -576,9 +576,9 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 	m_val11.GetWindowText(text);
 	if(!text.IsEmpty()) {
 		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
+		else
+			sprintf_s(tmp, 10, "% 6s", (char*)(LPCSTR)text);
 	}
 	else
 		sprintf_s(tmp, 10, "%s", no_number);
@@ -589,9 +589,9 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 	m_val21.GetWindowText(text);
 	if(!text.IsEmpty()) {
 		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
+		else
+			sprintf_s(tmp, 10, "% 6s", (char*)(LPCSTR)text);
 	}
 	else
 		sprintf_s(tmp, 10, "%s", no_number);
@@ -602,9 +602,9 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 	m_val12.GetWindowText(text);
 	if(!text.IsEmpty()) {
 		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
+		else
+			sprintf_s(tmp, 10, "% 6s", (char*)(LPCSTR)text);
 	}
 	else
 		sprintf_s(tmp, 10, "%s", no_number);
@@ -615,9 +615,9 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 	m_val22.GetWindowText(text);
 	if(!text.IsEmpty()) {
 		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
+		else
+			sprintf_s(tmp, 10, "% 6s", (char*)(LPCSTR)text);
 	}
 	else
 		sprintf_s(tmp, 10, "%s", no_number);
@@ -628,9 +628,9 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 	m_val13.GetWindowText(text);
 	if(!text.IsEmpty()) {
 		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
+		else
+			sprintf_s(tmp, 10, "% 6s", (char*)(LPCSTR)text);
 	}
 	else
 		sprintf_s(tmp, 10, "%s", no_number);
@@ -641,9 +641,9 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 	m_val23.GetWindowText(text);
 	if(!text.IsEmpty()) {
 		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
+		else
+			sprintf_s(tmp, 10, "% 6s", (char*)(LPCSTR)text);
 	}
 	else
 		sprintf_s(tmp, 10, "%s", no_number);
@@ -654,9 +654,9 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 	m_val14.GetWindowText(text);
 	if(!text.IsEmpty()) {
 		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
+		else
+			sprintf_s(tmp, 10, "% 6s", (char*)(LPCSTR)text);
 	}
 	else
 		sprintf_s(tmp, 10, "%s", no_number);
@@ -667,9 +667,9 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 	m_val24.GetWindowText(text);
 	if(!text.IsEmpty()) {
 		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
+		else
+			sprintf_s(tmp, 10, "% 6s", (char*)(LPCSTR)text);
 	}
 	else
 		sprintf_s(tmp, 10, "%s", no_number);
@@ -732,8 +732,8 @@ void CBRD2007Dlg::OnBnClickedSyncClock()
 
 void CBRD2007Dlg::OnBnClickedOpen()
 {
-	char tipuri[] = "Fisiere v44 (*.v44)|*.v44|Toate fisierele (*.*)|*.*||";
-	CFileDialog fileDlg(TRUE, "V44", "*.v44", OFN_FILEMUSTEXIST, tipuri, this);
+	char tipuri[] = "Fisiere v45 (*.v45)|*.v45|Toate fisierele (*.*)|*.*||";
+	CFileDialog fileDlg(TRUE, "V45", "*.v45", OFN_FILEMUSTEXIST, tipuri, this);
 	CStdioFile stdf;
 	CString strLine, strLine1, line1, line2, timp;
 	unsigned char tmp[256];
@@ -860,9 +860,9 @@ void CBRD2007Dlg::OnBnClickedSave()
 	numbers.Append(val);
 	numbers.Append(_T("\r\n"));
 
-	char tipuri[] = "Fisiere V54 (*.v44)|*.v44|Toate fisierele (*.*)|*.*||";
+	char tipuri[] = "Fisiere V45 (*.v45)|*.v44|Toate fisierele (*.*)|*.*||";
 	char enter[2] = {0x0d, 0x0a};
-	CFileDialog fileDlg(FALSE, "V44", NULL, OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT, tipuri, this);
+	CFileDialog fileDlg(FALSE, "V45", NULL, OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT, tipuri, this);
 
 	if(fileDlg.DoModal() == IDOK)
 	{
