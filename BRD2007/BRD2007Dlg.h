@@ -4,6 +4,7 @@
 #pragma once
 #include "afxwin.h"
 #include "inputnumber.h"
+
 #define DIGITS 5
 #define CURRENCY 4
 #define START 173
