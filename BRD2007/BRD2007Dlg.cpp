@@ -12,9 +12,6 @@
 #define new DEBUG_NEW
 #endif
 
-unsigned char START = 173;
-unsigned char STOP = 174;
-
 // CAboutDlg dialog used for App About
 int bcd(int dec)
 {
