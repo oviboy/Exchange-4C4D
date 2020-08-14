@@ -4,8 +4,12 @@
 #pragma once
 #include "afxwin.h"
 #include "inputnumber.h"
+
+#define DIGITS 5
 #define DIGITS 4
 #define CURRENCY 4
+#define START 173
+#define STOP 174
 
 // CBRD2007Dlg dialog
 class CBRD2007Dlg : public CDialog
