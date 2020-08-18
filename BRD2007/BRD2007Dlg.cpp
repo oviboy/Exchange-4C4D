@@ -15,18 +15,29 @@
 // CAboutDlg dialog used for App About
 int bcd(int dec)
 {
-	return ((dec/10)<<4)+(dec%10);
+	return ((dec / 10) << 4) + (dec % 10);
 }
+/*int bcd(int dec)
+{
+	int result, i;
+
+	for(i = 0; dec;) {
+		result = (dec % 10) * (int) pow(10.0f, i); // Get and convert lowest-order number.
+		dec = (int) dec / 10; // moved down here for clarity
+	}
+
+	return(result);
+}*/
 
 class CAboutDlg : public CDialog
 {
 public:
 	CAboutDlg();
 
-// Dialog Data
+	// Dialog Data
 	enum { IDD = IDD_ABOUTBOX };
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 // Implementation
@@ -57,6 +68,8 @@ CBRD2007Dlg::CBRD2007Dlg(CWnd* pParent /*=NULL*/)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	intensity = 100;
+	memset(NOVAL, 0x00, DIGITS + 1);
+	memset(NOVAL, '-', DIGITS);
 }
 
 void CBRD2007Dlg::DoDataExchange(CDataExchange* pDX)
@@ -65,11 +78,9 @@ void CBRD2007Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_VAL11, m_val11);
 	DDX_Control(pDX, IDC_VAL12, m_val12);
 	DDX_Control(pDX, IDC_VAL13, m_val13);
-	DDX_Control(pDX, IDC_VAL14, m_val14);
 	DDX_Control(pDX, IDC_VAL21, m_val21);
 	DDX_Control(pDX, IDC_VAL22, m_val22);
 	DDX_Control(pDX, IDC_VAL23, m_val23);
-	DDX_Control(pDX, IDC_VAL24, m_val24);
 }
 
 BEGIN_MESSAGE_MAP(CBRD2007Dlg, CDialog)
@@ -118,61 +129,61 @@ BOOL CBRD2007Dlg::OnInitDialog()
 	ReadConfig();
 	// TODO: Add extra initialization here
 	oldFont = m_val11.GetFont();	//este la fel pentru toate celelalte controale
-	font.CreateFont(16,                        
-		0,                        
-		0,                        
-		0,                        
-		FW_BOLD,                 
-		FALSE,                   
-		FALSE,                   
-		0,                       
-		DEFAULT_CHARSET,            
-		OUT_DEFAULT_PRECIS,      
-		CLIP_DEFAULT_PRECIS,     
-		DEFAULT_QUALITY,         
-		DEFAULT_PITCH | FF_SWISS, 
+	font.CreateFont(16,
+		0,
+		0,
+		0,
+		FW_BOLD,
+		FALSE,
+		FALSE,
+		0,
+		DEFAULT_CHARSET,
+		OUT_DEFAULT_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		DEFAULT_QUALITY,
+		DEFAULT_PITCH | FF_SWISS,
 		_T("Arial"));
-	title_font.CreateFont(21,                        
-		0,                        
-		0,                        
-		0,                        
-		FW_BOLD,                 
-		FALSE,                   
-		FALSE,                   
-		0,                       
-		DEFAULT_CHARSET,            
-		OUT_DEFAULT_PRECIS,      
-		CLIP_DEFAULT_PRECIS,     
-		ANTIALIASED_QUALITY,         
-		DEFAULT_PITCH | FF_SWISS, 
+	title_font.CreateFont(21,
+		0,
+		0,
+		0,
+		FW_BOLD,
+		FALSE,
+		FALSE,
+		0,
+		DEFAULT_CHARSET,
+		OUT_DEFAULT_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		ANTIALIASED_QUALITY,
+		DEFAULT_PITCH | FF_SWISS,
 		_T("Tahoma"));
-	font_valute.CreateFont(15,                        
-		0,                        
-		0,                        
-		0,                        
-		FW_BOLD,                 
-		FALSE,                   
-		FALSE,                   
-		0,                       
-		DEFAULT_CHARSET,            
-		OUT_DEFAULT_PRECIS,      
-		CLIP_DEFAULT_PRECIS,     
-		ANTIALIASED_QUALITY,         
-		DEFAULT_PITCH | FF_SWISS, 
+	font_valute.CreateFont(15,
+		0,
+		0,
+		0,
+		FW_BOLD,
+		FALSE,
+		FALSE,
+		0,
+		DEFAULT_CHARSET,
+		OUT_DEFAULT_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		ANTIALIASED_QUALITY,
+		DEFAULT_PITCH | FF_SWISS,
 		_T("Tahoma"));
-	font_valute_l.CreateFont(13,                        
-		0,                        
-		0,                        
-		0,                        
-		FW_BOLD,                 
-		FALSE,                   
-		FALSE,                   
-		0,                       
-		DEFAULT_CHARSET,            
-		OUT_DEFAULT_PRECIS,      
-		CLIP_DEFAULT_PRECIS,     
-		ANTIALIASED_QUALITY,         
-		DEFAULT_PITCH | FF_SWISS, 
+	font_valute_l.CreateFont(13,
+		0,
+		0,
+		0,
+		FW_BOLD,
+		FALSE,
+		FALSE,
+		0,
+		DEFAULT_CHARSET,
+		OUT_DEFAULT_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		ANTIALIASED_QUALITY,
+		DEFAULT_PITCH | FF_SWISS,
 		_T("Tahoma"));
 
 	m_val11.SetFont(&font);
@@ -181,8 +192,6 @@ BOOL CBRD2007Dlg::OnInitDialog()
 	m_val12.SetMaxLen(DIGITS);
 	m_val13.SetFont(&font);
 	m_val13.SetMaxLen(DIGITS);
-	m_val14.SetFont(&font);
-	m_val14.SetMaxLen(DIGITS);
 
 	m_val21.SetFont(&font);
 	m_val21.SetMaxLen(DIGITS);
@@ -190,8 +199,6 @@ BOOL CBRD2007Dlg::OnInitDialog()
 	m_val22.SetMaxLen(DIGITS);
 	m_val23.SetFont(&font);
 	m_val23.SetMaxLen(DIGITS);
-	m_val24.SetFont(&font);
-	m_val24.SetMaxLen(DIGITS);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -248,7 +255,7 @@ HCURSOR CBRD2007Dlg::OnQueryDragIcon()
 void CBRD2007Dlg::UpdateComPort()
 {
 	CStdioFile cfgFile;
-	char *path1, *path2, *path3;
+	char* path1, * path2, * path3;
 	path1 = new char[1024];
 	path2 = new char[1024];
 	path3 = new char[1024];
@@ -260,16 +267,16 @@ void CBRD2007Dlg::UpdateComPort()
 	GetModuleFileName(NULL, (LPTSTR)path1, 1024);
 	//curatam path2
 	memset(path2, 0x00, 1024);
-	while(len <= strlen(path1)) {
-		if(path1[len] == '\\')
+	while (len <= strlen(path1)) {
+		if (path1[len] == '\\')
 			last = len;
 		len++;
 	}
 	memcpy(path2, path1, last);
 	memset(path3, 0x00, 1024);
 	memcpy(path3, path1, last);
-	strncat(path2, "\\panou.cfg", strlen("\\panou.cfg"));
-	strncat(path3, "\\panounew.cfg", strlen("\\panounew.cfg"));
+	strncat_s(path2, PATHLEN, "\\panou.cfg", strlen("\\panou.cfg"));
+	strncat_s(path3, PATHLEN, "\\panounew.cfg", strlen("\\panounew.cfg"));
 
 	CString strLine;
 	CString bigString;
@@ -277,7 +284,7 @@ void CBRD2007Dlg::UpdateComPort()
 
 	delete path1;
 
-	while(cfgFile.ReadString(strLine))
+	while (cfgFile.ReadString(strLine))
 	{
 		bigString += strLine.TrimLeft(_T("\r\n"));
 		bigString += CString(_T("\n"));
@@ -287,12 +294,12 @@ void CBRD2007Dlg::UpdateComPort()
 
 	CString repl1, repl2, tmp;
 	tmp.Format("ComPort=%d\r\nIntensity=%d", portNumber, intensity);
-	
+
 	CStdioFile newCfg;
 	newCfg.Open((LPCTSTR)path3, CFile::modeCreate | CFile::modeWrite);
 	newCfg.WriteString(tmp);
 	newCfg.Close();
-	
+
 	try {
 		CFile::Remove((LPCTSTR)path2);
 
@@ -308,7 +315,7 @@ void CBRD2007Dlg::UpdateComPort()
 	try {
 		CFile::Rename((LPCTSTR)path3, (LPCTSTR)path2);
 	}
-	catch(CFileException* pEx ) {
+	catch (CFileException* pEx) {
 		AfxMessageBox(_T("Nu pot salva noua configuratie (Error 2) !"));
 		pEx->Delete();
 	}
@@ -319,75 +326,70 @@ void CBRD2007Dlg::UpdateComPort()
 
 void CBRD2007Dlg::ReadValues(void)
 {
-	FILE *iniFile;
-	char *path1, *path2;
-	char buffer[255];
-	path1 = new char[256];
-	path2 = new char[256];
+	FILE* iniFile;
+	errno_t ferr;
+	char* path1, * path2;
+	char buffer[MAXLINE];
+	path1 = new char[PATHLEN];
+	path2 = new char[PATHLEN];
 	unsigned len = 0, last = 0;
 	CString line;
 
 	//aflam aici calea executabilului
-	memset(path1, 0x00, 256);
-	GetModuleFileName(NULL, path1, 255);
+	memset(path1, 0x00, PATHLEN);
+	GetModuleFileName(NULL, path1, PATHLEN);
 	//curatam path2
-	memset(path2, 0x00, 256);
-	while(len <= strlen(path1)) {
-		if(path1[len] == '\\')
+	memset(path2, 0x00, PATHLEN);
+	while (len <= strlen(path1)) {
+		if (path1[len] == '\\')
 			last = len;
 		len++;
 	}
-	memcpy_s(path2, 255, path1, last);
-	strcat(path2, "\\pv.cfg");
-	if((iniFile = fopen(path2, "rb")) == NULL) {
-		delete []path1;
-		delete []path2;
+	memcpy_s(path2, PATHLEN, path1, last);
+	strcat_s(path2, PATHLEN, "\\pv.cfg");
+	if ((ferr = fopen_s(&iniFile, path2, "rb")) != 0) {
+		delete[]path1;
+		delete[]path2;
 		return;
 	}
-	delete []path1;
-	delete []path2;
+	delete[]path1;
+	delete[]path2;
 
 	do {
-		fgets(buffer, 255, iniFile);
+		fgets(buffer, MAXLINE, iniFile);
 		line = CString(buffer);
 		line.Trim();
-		if(line.GetAt(0) != ';') {
+		if (line.GetAt(0) != ';') {
 			int n;
-			char *pdest = NULL;
+			char* pdest = NULL;
 			pdest = strstr((char*)(LPCTSTR)line, "=");
 			n = (int)(pdest - (char*)(LPCTSTR)line + 1);
-			if(pdest != NULL) {
-				CString leftText = line.Left(n-1);
+			if (pdest != NULL) {
+				CString leftText = line.Left(n - 1);
 				CString rightText = line.Right(line.GetLength() - n);
-				if(leftText.CompareNoCase(_T("val11")) == 0) {
+				if (leftText.CompareNoCase(_T("val11")) == 0) {
 					m_val11.SetWindowTextA(rightText);
 				}
-				if(leftText.CompareNoCase(_T("val12")) == 0) {
+				if (leftText.CompareNoCase(_T("val12")) == 0) {
 					m_val21.SetWindowTextA(rightText);
 				}
-				if(leftText.CompareNoCase(_T("val21")) == 0) {
+				if (leftText.CompareNoCase(_T("val21")) == 0) {
 					m_val12.SetWindowTextA(rightText);
 				}
-				if(leftText.CompareNoCase(_T("val22")) == 0) {
+				if (leftText.CompareNoCase(_T("val22")) == 0) {
 					m_val22.SetWindowTextA(rightText);
 				}
-				if(leftText.CompareNoCase(_T("val31")) == 0) {
+				if (leftText.CompareNoCase(_T("val31")) == 0) {
 					m_val13.SetWindowTextA(rightText);
 				}
-				if(leftText.CompareNoCase(_T("val32")) == 0) {
+				if (leftText.CompareNoCase(_T("val32")) == 0) {
 					m_val23.SetWindowTextA(rightText);
-				}
-				if(leftText.CompareNoCase(_T("val41")) == 0) {
-					m_val14.SetWindowTextA(rightText);
-				}
-				if(leftText.CompareNoCase(_T("val42")) == 0) {
-					m_val24.SetWindowTextA(rightText);
 				}
 			}
 		}
-		if(feof(iniFile))
+		if (feof(iniFile))
 			break;
-	}while(TRUE);
+	} while (TRUE);
 
 	fclose(iniFile);
 }
@@ -395,38 +397,36 @@ void CBRD2007Dlg::ReadValues(void)
 void CBRD2007Dlg::SaveValues(void)
 {
 	CStdioFile cfgFile;
-	char *path1, *path2;
-	path1 = new char[1024];
-	path2 = new char[1024];
+	char* path1, * path2;
+	path1 = new char[PATHLEN];
+	path2 = new char[PATHLEN];
 	unsigned len = 0, last;
 	CString line;
 
 	//aflam aici calea executabilului
-	memset(path1, 0x00, 1024);
-	GetModuleFileName(NULL, (LPTSTR)path1, 1024);
+	memset(path1, 0x00, PATHLEN);
+	GetModuleFileName(NULL, (LPTSTR)path1, PATHLEN);
 	//curatam path2
-	memset(path2, 0x00, 1024);
-	while(len <= strlen(path1)) {
-		if(path1[len] == '\\')
+	memset(path2, 0x00, PATHLEN);
+	while (len <= strlen(path1)) {
+		if (path1[len] == '\\')
 			last = len;
 		len++;
 	}
 	memcpy(path2, path1, last);
-	strncat(path2, "\\pv.cfg", strlen("\\pv.cfg"));	
+	strncat_s(path2, PATHLEN, "\\pv.cfg", strlen("\\pv.cfg"));
 	delete path1;
 
-	CString val11, val12, val21, val22, val31, val32, val41, val42, tmp;
+	CString val11, val12, val21, val22, val31, val32, tmp;
 	m_val11.GetWindowTextA(val11);
 	m_val21.GetWindowTextA(val12);
 	m_val12.GetWindowTextA(val21);
 	m_val22.GetWindowTextA(val22);
 	m_val13.GetWindowTextA(val31);
 	m_val23.GetWindowTextA(val32);
-	m_val14.GetWindowTextA(val41);
-	m_val24.GetWindowTextA(val42);
 
-	tmp.Format("val11=%s\r\nval12=%s\r\nval21=%s\r\nval22=%s\r\nval31=%s\r\nval32=%s\r\nval41=%s\r\nval42=%s", val11, val12, val21, val22, val31, val32, val41, val42);
-	
+	tmp.Format("val11=%s\r\nval12=%s\r\nval21=%s\r\nval22=%s\r\nval31=%s\r\nval32=%s", val11, val12, val21, val22, val31, val32);
+
 	CStdioFile newCfg;
 	newCfg.Open((LPCTSTR)path2, CFile::modeCreate | CFile::modeWrite);
 	newCfg.WriteString(tmp);
@@ -437,59 +437,60 @@ void CBRD2007Dlg::SaveValues(void)
 
 void CBRD2007Dlg::ReadConfig(void)
 {
-	FILE *iniFile;
-	char *path1, *path2;
-	char buffer[255];
-	path1 = new char[256];
-	path2 = new char[256];
+	FILE* iniFile;
+	errno_t ferr;
+	char* path1, * path2;
+	char buffer[MAXLINE];
+	path1 = new char[PATHLEN+1];
+	path2 = new char[PATHLEN+1];
 	unsigned len = 0, last = 0;
 	CString line;
 
 	//aflam aici calea executabilului
-	memset(path1, 0x00, 256);
-	GetModuleFileName(NULL, path1, 255);
+	memset(path1, 0x00, PATHLEN+1);
+	GetModuleFileName(NULL, path1, PATHLEN);
 	//curatam path2
-	memset(path2, 0x00, 256);
-	while(len <= strlen(path1)) {
-		if(path1[len] == '\\')
+	memset(path2, 0x00, PATHLEN+1);
+	while (len <= strlen(path1)) {
+		if (path1[len] == '\\')
 			last = len;
 		len++;
 	}
-	memcpy_s(path2, 255, path1, last);
-	strcat(path2, "\\panou.cfg");
-	if((iniFile = fopen(path2, "rb")) == NULL) {
+	memcpy_s(path2, PATHLEN, path1, last);
+	strcat_s(path2, PATHLEN, "\\panou.cfg");
+	if ((ferr = fopen_s(&iniFile, path2, "rb")) != 0) {
 		AfxMessageBox(_T("Nu pot deschide fisierul de configurare \"panou.cfg\" ! \r\nAplicatia nu poate rula fara fisier de configurare !"));
-		delete []path1;
-		delete []path2;
+		delete[]path1;
+		delete[]path2;
 		SendMessage(WM_CLOSE, NULL, NULL);
 	}
-	delete []path1;
-	delete []path2;
+	delete[]path1;
+	delete[]path2;
 
 	do {
-		fgets(buffer, 255, iniFile);
+		fgets(buffer, MAXLINE, iniFile);
 		line = CString(buffer);
 		line.Trim();
-		if(line.GetAt(0) != ';') {
+		if (line.GetAt(0) != ';') {
 			int n;
-			char *pdest = NULL;
+			char* pdest = NULL;
 			pdest = strstr((char*)(LPCTSTR)line, "=");
 			n = (int)(pdest - (char*)(LPCTSTR)line + 1);
-			if(pdest != NULL) {
-				CString leftText = line.Left(n-1);
+			if (pdest != NULL) {
+				CString leftText = line.Left(n - 1);
 				CString rightText = line.Right(line.GetLength() - n);
-				if(leftText.CompareNoCase(_T("ComPort")) == 0) {
+				if (leftText.CompareNoCase(_T("ComPort")) == 0) {
 					portNumber = atoi((char*)(LPCTSTR)rightText);
 				}
-				if(leftText.CompareNoCase(_T("Intensity")) == 0) {
+				if (leftText.CompareNoCase(_T("Intensity")) == 0) {
 					intensity = atoi((char*)(LPCTSTR)rightText);
 					oldIntensity = intensity;
 				}
 			}
 		}
-		if(feof(iniFile))
+		if (feof(iniFile))
 			break;
-	}while(TRUE);
+	} while (TRUE);
 
 	ReadValues();
 
@@ -501,16 +502,16 @@ void CBRD2007Dlg::OnBnClickedSettingsCom()
 	//Setari de com
 	CSettings setting(portNumber, intensity);
 	INT_PTR nRet = setting.DoModal();
-	if(nRet == IDOK) {
+	if (nRet == IDOK) {
 		CString com;
 		oldIntensity = intensity;
 		setting.GetSelection(com, intensity);
 		char xArray[10];
 		memcpy(xArray, (LPCTSTR)com, 4);
-		if(portNumber != (int)(xArray[3] - 0x30) || oldIntensity != intensity) {
+		if (portNumber != (int)(xArray[3] - 0x30) || oldIntensity != intensity) {
 			oldPort = portNumber;
 			portNumber = (int)(xArray[3] - 0x30);
-			
+
 			UpdateComPort();
 		}
 	}
@@ -521,12 +522,10 @@ void CBRD2007Dlg::OnBnClickedExit()
 	m_val11.SetFont(oldFont);
 	m_val12.SetFont(oldFont);
 	m_val13.SetFont(oldFont);
-	m_val14.SetFont(oldFont);
 
 	m_val21.SetFont(oldFont);
 	m_val22.SetFont(oldFont);
 	m_val23.SetFont(oldFont);
-	m_val24.SetFont(oldFont);
 	SaveValues();
 	font.DeleteObject();
 	EndDialog(0);
@@ -543,10 +542,10 @@ void CBRD2007Dlg::OnCancel()
 	OnBnClickedExit();
 }
 
-void CBRD2007Dlg::OnTimer(UINT nIDEvent) 
+void CBRD2007Dlg::OnTimer(UINT nIDEvent)
 {
-	
-   CDialog::OnTimer(nIDEvent);
+
+	CDialog::OnTimer(nIDEvent);
 }
 
 void CBRD2007Dlg::OnBnClickedTrimite()
@@ -560,116 +559,84 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 	memset(panel_data, 0x00, 2048);
 	panel_data[len] = START;			//start
 	len++;
-	panel_data[len] = 240-(unsigned char)intensity;
+	panel_data[len] = 240 - (unsigned char)intensity;
 	len++;
-
-	char no_number[DIGITS];
-	memset(no_number, 0x00, DIGITS);
-	for (int i = 0; i < DIGITS; i++)
-		no_number[i] = '-';
-
 
 	memset(tmp, 0x00, 10);
 	m_val11.GetWindowText(text);
-	if(!text.IsEmpty()) {
-		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
+	if (!text.IsEmpty()) {
+		if (text.Find('.') == -1)
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
+		else
+			sprintf_s(tmp, 10, "% 6s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", no_number);
+		sprintf_s(tmp, 10, "%s", NOVAL);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
 	memset(tmp, 0x00, 10);
 	m_val21.GetWindowText(text);
-	if(!text.IsEmpty()) {
-		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
+	if (!text.IsEmpty()) {
+		if (text.Find('.') == -1)
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
+		else
+			sprintf_s(tmp, 10, "% 6s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", no_number);
+		sprintf_s(tmp, 10, "%s", NOVAL);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
 	memset(tmp, 0x00, 10);
 	m_val12.GetWindowText(text);
-	if(!text.IsEmpty()) {
-		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
+	if (!text.IsEmpty()) {
+		if (text.Find('.') == -1)
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
+		else
+			sprintf_s(tmp, 10, "% 6s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", no_number);
+		sprintf_s(tmp, 10, "%s", NOVAL);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
 	memset(tmp, 0x00, 10);
 	m_val22.GetWindowText(text);
-	if(!text.IsEmpty()) {
-		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
+	if (!text.IsEmpty()) {
+		if (text.Find('.') == -1)
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
+		else
+			sprintf_s(tmp, 10, "% 6s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", no_number);
+		sprintf_s(tmp, 10, "%s", NOVAL);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
 	memset(tmp, 0x00, 10);
 	m_val13.GetWindowText(text);
-	if(!text.IsEmpty()) {
-		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
+	if (!text.IsEmpty()) {
+		if (text.Find('.') == -1)
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
+		else
+			sprintf_s(tmp, 10, "% 6s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", no_number);
+		sprintf_s(tmp, 10, "%s", NOVAL);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
 	memset(tmp, 0x00, 10);
 	m_val23.GetWindowText(text);
-	if(!text.IsEmpty()) {
-		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
+	if (!text.IsEmpty()) {
+		if (text.Find('.') == -1)
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
+		else
+			sprintf_s(tmp, 10, "% 6s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", no_number);
-	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
-	len += strlen(tmp);
-
-	memset(tmp, 0x00, 10);
-	m_val14.GetWindowText(text);
-	if(!text.IsEmpty()) {
-		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
-			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
-	}
-	else
-		sprintf_s(tmp, 10, "%s", no_number);
-	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
-	len += strlen(tmp);
-
-	memset(tmp, 0x00, 10);
-	m_val24.GetWindowText(text);
-	if(!text.IsEmpty()) {
-		if(text.Find('.') == -1)
-			sprintf_s(tmp, 10, "% 4s", (char*)(LPCSTR)text);
-		else
-			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
-	}
-	else
-		sprintf_s(tmp, 10, "%s", no_number);
+		sprintf_s(tmp, 10, "%s", NOVAL);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -729,93 +696,79 @@ void CBRD2007Dlg::OnBnClickedSyncClock()
 
 void CBRD2007Dlg::OnBnClickedOpen()
 {
-	char tipuri[] = "Fisiere v44 (*.v44)|*.v44|Toate fisierele (*.*)|*.*||";
-	CFileDialog fileDlg(TRUE, "V44", "*.v44", OFN_FILEMUSTEXIST, tipuri, this);
+	char tipuri[] = "Fisiere v35 (*.v35)|*.v35|Toate fisierele (*.*)|*.*||";
+	CFileDialog fileDlg(TRUE, "V35", "*.v35", OFN_FILEMUSTEXIST, tipuri, this);
 	CStdioFile stdf;
 	CString strLine, strLine1, line1, line2, timp;
 	unsigned char tmp[256];
 	int index = 0, idx = 0;
 	BOOL num;
-	
+
 	num = FALSE;
-	if(fileDlg.DoModal() == IDOK) {
+	if (fileDlg.DoModal() == IDOK) {
 		inFile = fileDlg.GetPathName();
-		if(!stdf.Open(inFile, CFile::modeRead | CFile::typeText))
+		if (!stdf.Open(inFile, CFile::modeRead | CFile::typeText))
 			AfxMessageBox("Fisierul introdus nu se poate deschide !");
 		int i = 0;
-		while(stdf.GetPosition() != stdf.GetLength()) {
+		while (stdf.GetPosition() != stdf.GetLength()) {
 			stdf.ReadString(strLine);
-			if(i != 0)
+			if (i != 0)
 				idx++;
-			if(i == 0) {
+			if (i == 0) {
 				memset(tmp, 0x00, 255);
-				if(strLine.GetLength() >= 255)
+				if (strLine.GetLength() >= 255)
 					memcpy_s(tmp, 255, (LPCSTR)strLine, 255);//citeste max 255 din linie. oricum nu ne intereseaza
 				else								  //deoarece sigur nu avem asa o linie in fisier (intr-un fisier valid, ma refer)
 					memcpy_s(tmp, 255, (LPCSTR)strLine, strLine.GetLength());
 				i++;
-				if(tmp[0] != START) {	//verific daca fisierul selectat este unul corespunzator
+				if (tmp[0] != START) {	//verific daca fisierul selectat este unul corespunzator
 					AfxMessageBox("Fisierul selectat este invalid !");
 					break;
 				}
 			}
 			else {
 				int number_of_decimal_points = 0;
-				if(idx == 1) {//dob ron
+				if (idx == 1) {//dob ron
 					m_val11.SetWindowText(strLine);
-				    if (strLine.Find('.') != -1) {
+					if (strLine.Find('.') != -1) {
 						number_of_decimal_points = 1;
 					}
 					m_val11.setCheckPoint((bool)number_of_decimal_points);
 				}
-				else if(idx == 2) {
+				else if (idx == 2) {
 					m_val21.SetWindowText(strLine);
-				    if (strLine.Find('.') != -1) {
+					if (strLine.Find('.') != -1) {
 						number_of_decimal_points = 1;
 					}
 					m_val21.setCheckPoint((bool)number_of_decimal_points);
 				}
-				else if(idx == 3) {
+				else if (idx == 3) {
 					m_val12.SetWindowText(strLine);
-				    if (strLine.Find('.') != -1) {
+					if (strLine.Find('.') != -1) {
 						number_of_decimal_points = 1;
 					}
 					m_val12.setCheckPoint((bool)number_of_decimal_points);
 				}
-				else if(idx == 4) {
+				else if (idx == 4) {
 					m_val22.SetWindowText(strLine);
-				    if (strLine.Find('.') != -1) {
+					if (strLine.Find('.') != -1) {
 						number_of_decimal_points = 1;
 					}
 					m_val22.setCheckPoint((bool)number_of_decimal_points);
 				}
-				else if(idx == 5) {
+				else if (idx == 5) {
 					m_val13.SetWindowText(strLine);
-				    if (strLine.Find('.') != -1) {
+					if (strLine.Find('.') != -1) {
 						number_of_decimal_points = 1;
 					}
 					m_val13.setCheckPoint((bool)number_of_decimal_points);
 				}
-				else if(idx == 6) {
+				else if (idx == 6) {
 					m_val23.SetWindowText(strLine);
-				    if (strLine.Find('.') != -1) {
+					if (strLine.Find('.') != -1) {
 						number_of_decimal_points = 1;
 					}
 					m_val23.setCheckPoint((bool)number_of_decimal_points);
-				}
-				else if(idx == 7) {
-					m_val14.SetWindowText(strLine);
-				    if (strLine.Find('.') != -1) {
-						number_of_decimal_points = 1;
-					}
-					m_val14.setCheckPoint((bool)number_of_decimal_points);
-				}
-				else if(idx == 8) {
-					m_val24.SetWindowText(strLine);
-				    if (strLine.Find('.') != -1) {
-						number_of_decimal_points = 1;
-					}
-					m_val24.setCheckPoint((bool)number_of_decimal_points);
 				}
 			}
 		}
@@ -828,7 +781,7 @@ void CBRD2007Dlg::OnBnClickedSave()
 	CString numbers;
 	CString line1, line2, val;
 	int timp = 0;
-	
+
 	//obtin valorile numerice
 	numbers = _T("");
 	m_val11.GetWindowText(val);
@@ -850,21 +803,15 @@ void CBRD2007Dlg::OnBnClickedSave()
 	m_val23.GetWindowText(val);
 	numbers.Append(val);
 	numbers.Append(_T("\r\n"));
-	m_val14.GetWindowText(val);
-	numbers.Append(val);
-	numbers.Append(_T("\r\n"));
-	m_val24.GetWindowText(val);
-	numbers.Append(val);
-	numbers.Append(_T("\r\n"));
 
-	char tipuri[] = "Fisiere V54 (*.v44)|*.v44|Toate fisierele (*.*)|*.*||";
-	char enter[2] = {0x0d, 0x0a};
-	CFileDialog fileDlg(FALSE, "V44", NULL, OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT, tipuri, this);
+	char tipuri[] = "Fisiere V35 (*.v35)|*.v35|Toate fisierele (*.*)|*.*||";
+	char enter[2] = { 0x0d, 0x0a };
+	CFileDialog fileDlg(FALSE, "V35", NULL, OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT, tipuri, this);
 
-	if(fileDlg.DoModal() == IDOK)
+	if (fileDlg.DoModal() == IDOK)
 	{
 		outFile = fileDlg.GetPathName();
-		if(outFile.IsEmpty())
+		if (outFile.IsEmpty())
 			AfxMessageBox("Trebuie sa introduceti un nume de fisier mai intai !");
 		else
 		{
@@ -872,9 +819,9 @@ void CBRD2007Dlg::OnBnClickedSave()
 			CFile out((LPCTSTR)outFile, CFile::modeCreate | CFile::modeWrite);
 			CString time, field1, field2;
 			int txIndex = 0;
-			unsigned char *buff;
+			unsigned char* buff;
 			buff = (unsigned char*)malloc(10);
-			
+
 			memset(buff, 0x00, 10);
 			buff[0] = START;
 			out.Write(buff, 1);	//se incepe cu caracterul de start
