@@ -9,6 +9,7 @@
 #define CURRENCY 4
 #define START 173
 #define STOP 174
+#define MAXLINE 80
 
 // CBRD2007Dlg dialog
 class CBRD2007Dlg : public CDialog
@@ -32,6 +33,7 @@ public:
 	int oldPort, oldIntensity;
 
 protected:
+	char NO_NUM[DIGITS + 1];
 	CString inFile;		// numele fisierului de unde se incarca datele despre panouri
 	CString outFile;	// numele fisierului unde se salveaza datele din panouri
 	//CFont font_com;
