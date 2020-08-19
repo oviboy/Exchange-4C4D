@@ -57,6 +57,8 @@ CBRD2007Dlg::CBRD2007Dlg(CWnd* pParent /*=NULL*/)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	intensity = 100;
+	memset(NO_NUM, 0x00, DIGITS + 1);
+	memset(NO_NUM, '-', DIGITS);
 }
 
 void CBRD2007Dlg::DoDataExchange(CDataExchange* pDX)
@@ -249,27 +251,27 @@ void CBRD2007Dlg::UpdateComPort()
 {
 	CStdioFile cfgFile;
 	char *path1, *path2, *path3;
-	path1 = new char[1024];
-	path2 = new char[1024];
-	path3 = new char[1024];
+	path1 = new char[MAX_PATH];
+	path2 = new char[MAX_PATH]; 
+	path3 = new char[MAX_PATH];
 	unsigned len = 0, last;
 	CString line;
 
 	//aflam aici calea executabilului
-	memset(path1, 0x00, 1024);
-	GetModuleFileName(NULL, (LPTSTR)path1, 1024);
+	memset(path1, 0x00, MAX_PATH);
+	GetModuleFileName(NULL, (LPTSTR)path1, MAX_PATH);
 	//curatam path2
-	memset(path2, 0x00, 1024);
+	memset(path2, 0x00, MAX_PATH);
 	while(len <= strlen(path1)) {
 		if(path1[len] == '\\')
 			last = len;
 		len++;
 	}
-	memcpy(path2, path1, last);
-	memset(path3, 0x00, 1024);
-	memcpy(path3, path1, last);
-	strncat(path2, "\\panou.cfg", strlen("\\panou.cfg"));
-	strncat(path3, "\\panounew.cfg", strlen("\\panounew.cfg"));
+	memcpy_s(path2, MAX_PATH, path1, last);
+	memset(path3, 0x00, MAX_PATH);
+	memcpy_s(path3, MAX_PATH, path1, last);
+	strncat_s(path2, MAX_PATH, "\\panou.cfg", strlen("\\panou.cfg"));
+	strncat_s(path3, MAX_PATH, "\\panounew.cfg", strlen("\\panounew.cfg"));
 
 	CString strLine;
 	CString bigString;
@@ -320,26 +322,27 @@ void CBRD2007Dlg::UpdateComPort()
 void CBRD2007Dlg::ReadValues(void)
 {
 	FILE *iniFile;
+	errno_t ferr;
 	char *path1, *path2;
-	char buffer[255];
-	path1 = new char[256];
-	path2 = new char[256];
+	char buffer[MAXLINE];
+	path1 = new char[MAX_PATH];
+	path2 = new char[MAX_PATH];
 	unsigned len = 0, last = 0;
 	CString line;
 
 	//aflam aici calea executabilului
-	memset(path1, 0x00, 256);
-	GetModuleFileName(NULL, path1, 255);
+	memset(path1, 0x00, MAXLINE);
+	GetModuleFileName(NULL, path1, MAX_PATH);
 	//curatam path2
-	memset(path2, 0x00, 256);
+	memset(path2, 0x00, MAX_PATH);
 	while(len <= strlen(path1)) {
 		if(path1[len] == '\\')
 			last = len;
 		len++;
 	}
-	memcpy_s(path2, 255, path1, last);
-	strcat(path2, "\\pv.cfg");
-	if((iniFile = fopen(path2, "rb")) == NULL) {
+	memcpy_s(path2, MAX_PATH, path1, last);
+	strcat_s(path2, MAX_PATH, "\\pv.cfg");
+	if((ferr = fopen_s(&iniFile, path2, "rb")) != 0) {
 		delete []path1;
 		delete []path2;
 		return;
@@ -348,7 +351,9 @@ void CBRD2007Dlg::ReadValues(void)
 	delete []path2;
 
 	do {
-		fgets(buffer, 255, iniFile);
+		memset(buffer, 0x00, MAXLINE);
+
+		fgets(buffer, MAXLINE, iniFile);
 		line = CString(buffer);
 		line.Trim();
 		if(line.GetAt(0) != ';') {
@@ -396,23 +401,23 @@ void CBRD2007Dlg::SaveValues(void)
 {
 	CStdioFile cfgFile;
 	char *path1, *path2;
-	path1 = new char[1024];
-	path2 = new char[1024];
+	path1 = new char[MAX_PATH];
+	path2 = new char[MAX_PATH];
 	unsigned len = 0, last;
 	CString line;
 
 	//aflam aici calea executabilului
-	memset(path1, 0x00, 1024);
-	GetModuleFileName(NULL, (LPTSTR)path1, 1024);
+	memset(path1, 0x00, MAX_PATH);
+	GetModuleFileName(NULL, (LPTSTR)path1, MAX_PATH);
 	//curatam path2
-	memset(path2, 0x00, 1024);
+	memset(path2, 0x00, MAX_PATH);
 	while(len <= strlen(path1)) {
 		if(path1[len] == '\\')
 			last = len;
 		len++;
 	}
-	memcpy(path2, path1, last);
-	strncat(path2, "\\pv.cfg", strlen("\\pv.cfg"));	
+	memcpy_s(path2, MAX_PATH, path1, last);
+	strncat_s(path2, MAX_PATH, "\\pv.cfg", strlen("\\pv.cfg"));	
 	delete path1;
 
 	CString val11, val12, val21, val22, val31, val32, val41, val42, tmp;
@@ -438,26 +443,27 @@ void CBRD2007Dlg::SaveValues(void)
 void CBRD2007Dlg::ReadConfig(void)
 {
 	FILE *iniFile;
+	errno_t ferr;
 	char *path1, *path2;
-	char buffer[255];
-	path1 = new char[256];
-	path2 = new char[256];
+	char buffer[MAXLINE];
+	path1 = new char[MAX_PATH];
+	path2 = new char[MAX_PATH];
 	unsigned len = 0, last = 0;
 	CString line;
 
 	//aflam aici calea executabilului
-	memset(path1, 0x00, 256);
-	GetModuleFileName(NULL, path1, 255);
+	memset(path1, 0x00, MAX_PATH);
+	GetModuleFileName(NULL, path1, MAX_PATH);
 	//curatam path2
-	memset(path2, 0x00, 256);
+	memset(path2, 0x00, MAX_PATH);
 	while(len <= strlen(path1)) {
 		if(path1[len] == '\\')
 			last = len;
 		len++;
 	}
-	memcpy_s(path2, 255, path1, last);
-	strcat(path2, "\\panou.cfg");
-	if((iniFile = fopen(path2, "rb")) == NULL) {
+	memcpy_s(path2, MAX_PATH, path1, last);
+	strcat_s(path2, MAX_PATH, "\\panou.cfg");
+	if((ferr = fopen_s(&iniFile, path2, "rb")) != 0) {
 		AfxMessageBox(_T("Nu pot deschide fisierul de configurare \"panou.cfg\" ! \r\nAplicatia nu poate rula fara fisier de configurare !"));
 		delete []path1;
 		delete []path2;
@@ -467,7 +473,9 @@ void CBRD2007Dlg::ReadConfig(void)
 	delete []path2;
 
 	do {
-		fgets(buffer, 255, iniFile);
+		memset(buffer, 0x00, MAXLINE);
+
+		fgets(buffer, MAXLINE, iniFile);
 		line = CString(buffer);
 		line.Trim();
 		if(line.GetAt(0) != ';') {
@@ -527,6 +535,7 @@ void CBRD2007Dlg::OnBnClickedExit()
 	m_val22.SetFont(oldFont);
 	m_val23.SetFont(oldFont);
 	m_val24.SetFont(oldFont);
+
 	SaveValues();
 	font.DeleteObject();
 	EndDialog(0);
@@ -563,12 +572,6 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 	panel_data[len] = 240-(unsigned char)intensity;
 	len++;
 
-	char no_number[DIGITS];
-	memset(no_number, 0x00, DIGITS);
-	for (int i = 0; i < DIGITS; i++)
-		no_number[i] = '-';
-
-
 	memset(tmp, 0x00, 10);
 	m_val11.GetWindowText(text);
 	if(!text.IsEmpty()) {
@@ -578,7 +581,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", no_number);
+		sprintf_s(tmp, 10, "%s", NO_NUM);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -591,7 +594,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", no_number);
+		sprintf_s(tmp, 10, "%s", NO_NUM);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -604,7 +607,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", no_number);
+		sprintf_s(tmp, 10, "%s", NO_NUM);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -617,7 +620,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", no_number);
+		sprintf_s(tmp, 10, "%s", NO_NUM);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -630,7 +633,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", no_number);
+		sprintf_s(tmp, 10, "%s", NO_NUM);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -643,7 +646,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", no_number);
+		sprintf_s(tmp, 10, "%s", NO_NUM);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -656,7 +659,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", no_number);
+		sprintf_s(tmp, 10, "%s", NO_NUM);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -669,7 +672,7 @@ void CBRD2007Dlg::OnBnClickedTrimite()
 			sprintf_s(tmp, 10, "% 5s", (char*)(LPCSTR)text);
 	}
 	else
-		sprintf_s(tmp, 10, "%s", no_number);
+		sprintf_s(tmp, 10, "%s", NO_NUM);
 	memcpy_s(panel_data + len, 10, (unsigned char*)tmp, strlen(tmp));
 	len += strlen(tmp);
 
@@ -733,7 +736,7 @@ void CBRD2007Dlg::OnBnClickedOpen()
 	CFileDialog fileDlg(TRUE, "V44", "*.v44", OFN_FILEMUSTEXIST, tipuri, this);
 	CStdioFile stdf;
 	CString strLine, strLine1, line1, line2, timp;
-	unsigned char tmp[256];
+	unsigned char tmp[MAXLINE];
 	int index = 0, idx = 0;
 	BOOL num;
 	
@@ -748,11 +751,11 @@ void CBRD2007Dlg::OnBnClickedOpen()
 			if(i != 0)
 				idx++;
 			if(i == 0) {
-				memset(tmp, 0x00, 255);
-				if(strLine.GetLength() >= 255)
-					memcpy_s(tmp, 255, (LPCSTR)strLine, 255);//citeste max 255 din linie. oricum nu ne intereseaza
+				memset(tmp, 0x00, MAXLINE);
+				if(strLine.GetLength() >= MAXLINE)
+					memcpy_s(tmp, MAXLINE, (LPCSTR)strLine, MAXLINE);//citeste max 255 din linie. oricum nu ne intereseaza
 				else								  //deoarece sigur nu avem asa o linie in fisier (intr-un fisier valid, ma refer)
-					memcpy_s(tmp, 255, (LPCSTR)strLine, strLine.GetLength());
+					memcpy_s(tmp, MAXLINE, (LPCSTR)strLine, strLine.GetLength());
 				i++;
 				if(tmp[0] != START) {	//verific daca fisierul selectat este unul corespunzator
 					AfxMessageBox("Fisierul selectat este invalid !");
